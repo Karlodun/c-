@@ -14,6 +14,7 @@ CAbase base1(10, 10);
 void savegame(){
 
 }
+
 void loadgame(){
 
 }
@@ -157,16 +158,37 @@ int main()
                 cout << "Row: " << worldRow << " Column: " << worldColumn;
                 cout << " Actual value: " << base1.getCell((worldColumn-1), (worldRow-1)) << endl;
                 // now flip the state of cell
-                base1.setCell((worldRow-1),(worldColumn-1), ( (base1.getCell(worldColumn-1), (worldRow-1)) ? 0 : 1 ) );
+                base1.flipCell((worldRow-1),(worldColumn-1));
                 break;
             case 3 :
                 printMap();
                 break;
             case 4 :
-                //evolve
+                base1.evolveWorld();
                 break;
             case 5 :
-                //resize
+                // resize world, we use same vars, as in previous cases
+                // loop to get the rows number
+                do{
+                    cout << "Enter amount of rows: ";
+                    getline(cin, userinput);
+                    stringstream inputStream(userinput);
+                    if (inputStream >> worldRow) break;
+                    cout << "wrong input, please follow instructions!" << endl;
+                    wronginput=true;
+                }while(wronginput);
+
+                // loop to get the columns number
+                do{
+                    cout << "Enter amount of columns: ";
+                    getline(cin, userinput);
+                    stringstream inputStream(userinput);
+                    if (inputStream >> worldColumn) break;
+                    cout << "wrong input, please follow instructions!" << endl;
+                    wronginput=true;
+                }while(wronginput);
+                base1.resizeWorld(worldColumn,worldRow);
+
             default:
                 cout << "Please choose one of the given options (0-2)";
                 break;

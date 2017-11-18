@@ -24,8 +24,8 @@ class CAbase
           void flipCell(int x, int y);
           void flipCell(int id);
           // evolve a Cell of world and save in newWorld
-          void evolveCell(int x, int y);
-          void evolveCell(int id);
+          bool evolveCell(int x, int y);
+          bool evolveCell(int id);
           // cound all living neighbors, needed for evolveCell
           int livingNeighbors(int x, int y);
           int livingNeighbors(int id);

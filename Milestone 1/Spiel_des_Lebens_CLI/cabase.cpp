@@ -76,6 +76,14 @@ void CAbase::flipCell(int x, int y){
 }
 
 void CAbase::flipCell(int id){
+    World[id]=!World[id];
+}
+
+bool CAbase::evolveCell(int x, int y){
+    return evolveCell(cellId(x,y));
+}
+
+bool CAbase::evolveCell(int id){
     bool status=0;
     int ln = livingNeighbors(id);
     switch (ln){
@@ -86,23 +94,7 @@ void CAbase::flipCell(int id){
         default: status = 0;
     }
     newWorld[id]=status;
-}
-
-void CAbase::evolveCell(int x, int y){
-    evolveCell(cellId(x,y));
-}
-
-void CAbase::evolveCell(int id){
-    bool status=0;
-    int ln = livingNeighbors(id);
-    switch (ln){
-        case 0: status = 0;
-        case 1: status = 0;
-        case 2: status = (World[id]) ? 1 : 0;
-        case 3: status = 1;
-        default: status = 0;
-    }
-    newWorld[id]=status;
+    return status;
 }
 
 void CAbase::resizeWorld(int size_x, int size_y){
@@ -122,8 +114,16 @@ void CAbase::evolveWorld(){
     for (int cellid=0; cellid<=worldSize; cellid++){
         evolveCell(cellid);
     }
+    // reset living cells counter
+    alive=0;
+
     // copy new world to old
+    for (int i=1; i<worldSize; i++){
+        World[i]=newWorld[i];
+        alive+=World[i];
+    }
     // delete new world values
+    delete [] newWorld;
 };
 
 void CAbase::clearWorld(){
