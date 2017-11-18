@@ -5,6 +5,8 @@
 #include <string>
 #include <sstream>
 
+// version 0.05
+
 using namespace std;
 
 CAbase base1(10, 10);
