@@ -12,8 +12,8 @@ CAbase::CAbase(int size_x, int size_y){
     Nx=size_x;
     Ny=size_y;
     worldSize=Nx*Ny;
-    World=new int[worldSize];
-    newWorld=new int[worldSize];
+    World=new bool[worldSize];
+    newWorld=new bool[worldSize];
     for (int i=0; i<worldSize; i++){
         World[i]=0;
         newWorld[i]=0;
@@ -50,33 +50,33 @@ int CAbase::livingNeighbors(int id){
 int CAbase::cellId(int x, int y){
     // y is the row number, starting with 1
     // x is cell number, starting with 1
-    return ((y-1)*Nx+(x-1));
+    return (y*Nx+x);
 }
 
-int CAbase::getCell(int x, int y){
+bool CAbase::getCell(int x, int y){
     return getCell(cellId(x,y));
 };
 
-int CAbase::getCell(int id){
+bool CAbase::getCell(int id){
     return World[id];
 };
 
-void CAbase::setCell(int x, int y, int status){
+void CAbase::setCell(int x, int y, bool status){
     // sets the value of cell in world, used to setup or change status
     setCell(cellId(x,y), status);
 };
 
-void CAbase::setCell(int id, int status){
+void CAbase::setCell(int id, bool status){
     // sets the value of cell in world, used to setup or change status
     World[id]=status;
 };
 
-void CAbase::evolveCell(int x, int y){
-    evolveCell(cellId(x,y));
+void CAbase::flipCell(int x, int y){
+    flipCell(cellId(x,y));
 }
 
-int CAbase::evolveCell(int id){
-    int status=0;
+void CAbase::flipCell(int id){
+    bool status=0;
     int ln = livingNeighbors(id);
     switch (ln){
         case 0: status = 0;
@@ -86,7 +86,23 @@ int CAbase::evolveCell(int id){
         default: status = 0;
     }
     newWorld[id]=status;
-    return status;
+}
+
+void CAbase::evolveCell(int x, int y){
+    evolveCell(cellId(x,y));
+}
+
+void CAbase::evolveCell(int id){
+    bool status=0;
+    int ln = livingNeighbors(id);
+    switch (ln){
+        case 0: status = 0;
+        case 1: status = 0;
+        case 2: status = (World[id]) ? 1 : 0;
+        case 3: status = 1;
+        default: status = 0;
+    }
+    newWorld[id]=status;
 }
 
 void CAbase::resizeWorld(int size_x, int size_y){
@@ -98,8 +114,8 @@ void CAbase::resizeWorld(int size_x, int size_y){
 
 void CAbase::createWorld(){
     // we just set the vars, but don'T touch their inner, should be 0 anyways.
-    World = new int[worldSize];
-    newWorld = new int[worldSize];
+    World = new bool[worldSize];
+    newWorld = new bool[worldSize];
 }
 
 void CAbase::evolveWorld(){
