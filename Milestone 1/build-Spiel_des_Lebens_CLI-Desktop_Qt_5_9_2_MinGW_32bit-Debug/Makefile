@@ -210,6 +210,7 @@ Makefile: ../Spiel_des_Lebens_CLI/Spiel_des_Lebens_CLI.pro D:/Dev/Qt/5.9.2/mingw
 		D:/Dev/Qt/5.9.2/mingw53_32/mkspecs/features/qt_config.prf \
 		D:/Dev/Qt/5.9.2/mingw53_32/mkspecs/win32-g++/qmake.conf \
 		D:/Dev/Qt/5.9.2/mingw53_32/mkspecs/features/spec_post.prf \
+		.qmake.stash \
 		D:/Dev/Qt/5.9.2/mingw53_32/mkspecs/features/exclusive_builds.prf \
 		D:/Dev/Qt/5.9.2/mingw53_32/mkspecs/features/toolchain.prf \
 		D:/Dev/Qt/5.9.2/mingw53_32/mkspecs/features/default_pre.prf \
@@ -378,6 +379,7 @@ D:/Dev/Qt/5.9.2/mingw53_32/mkspecs/features/qt_functions.prf:
 D:/Dev/Qt/5.9.2/mingw53_32/mkspecs/features/qt_config.prf:
 D:/Dev/Qt/5.9.2/mingw53_32/mkspecs/win32-g++/qmake.conf:
 D:/Dev/Qt/5.9.2/mingw53_32/mkspecs/features/spec_post.prf:
+.qmake.stash:
 D:/Dev/Qt/5.9.2/mingw53_32/mkspecs/features/exclusive_builds.prf:
 D:/Dev/Qt/5.9.2/mingw53_32/mkspecs/features/toolchain.prf:
 D:/Dev/Qt/5.9.2/mingw53_32/mkspecs/features/default_pre.prf:

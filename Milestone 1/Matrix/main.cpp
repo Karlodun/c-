@@ -51,8 +51,8 @@ int main()
 
     do {
         string userinput;
-        int menuoption, A2row, A2column;
-        bool wronginput;
+        int menuoption, A2row, A2column, cell_value;
+        int wronginput;
         cout << "Choose an option: " << endl << "0. Exit" << endl << "1. Change Cell" << endl << "2. Reprint" << endl;
         getline(cin, userinput);
         stringstream inputStream(userinput);
@@ -74,7 +74,6 @@ int main()
                     getline(cin, userinput);
                     stringstream inputStream(userinput);
                     if (inputStream >> A2row){
-                        cout << A2row;
                         if((0 < A2row) & (A2row<31)) break;
                     }
                     cout << "wrong input, please follow instructions!" << endl;
@@ -87,7 +86,6 @@ int main()
                     getline(cin, userinput);
                     stringstream inputStream(userinput);
                     if (inputStream >> A2column){
-                        cout << A2column;
                         if((0 < A2column) & (A2column<31)) break;
                     }
                     cout << "wrong input, please follow instructions!" << endl;
@@ -96,7 +94,19 @@ int main()
 
                 cout << "Row: " << A2row << " Column: " << A2column;
                 cout << " Actual value: " << A2[(A2row-1)*(A2column-1)] << endl;
-                cout << "New value (1-9): "; cin >> A2[(A2row-1)*(A2column-1)];
+                // loop to get new value
+                do{
+                    cout << "New value (1-9): ";
+                    getline(cin, userinput);
+                    stringstream inputStream(userinput);
+                    if (inputStream >> cell_value){
+                        if((0 < cell_value) & (cell_value<10)) break;
+                    }
+                    cout << "wrong input, please follow instructions!" << endl;
+                    wronginput=true;
+                }while(wronginput);
+
+                A2[(A2row-1)*(A2column-1)]=cell_value;
                 break;
             case 2 :
                 printA2();

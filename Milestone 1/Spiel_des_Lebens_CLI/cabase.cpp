@@ -1,49 +1,21 @@
-#ifndef CABASE_H
-#define CABASE_H
+#include <iostream>
+#include <fstream>
+#include <CAbase.h>
+#include <stdlib.h>
+#include <string>
+#include <sstream>
 
 using namespace std;
-
-class CAbase
-{
-     private :
-          int Nx, Ny, worldSize, alive=0, World_age=0;
-          bool* World = NULL;
-          bool* newWorld = NULL;
-     public :
-          // constructor
-          CAbase(int size_x, int size_y);
-          // destructor:
-          ~CAbase();
-          void resizeWorld(int size_x, int size_y); // returns size if World
-          void createWorld(); // returns size of World
-          int cellId(int x, int y); // returns actual id for x and y coordinates
-          // evolve a Cell of world and save in newWorld
-          void evolveCell(int x, int y);
-          void evolveCell(int id);
-          // cound all living neighbors, needed for evolveCell
-          int livingNeighbors(int x, int y);
-          int livingNeighbors(int id);
-
-          void evolveWorld(); // no return needed
-          // returns cell data
-          bool getCell(int x, int y);
-          bool getCell(int id);
-          // sets cell data in actual world
-          void setCell(int x, int y, bool status);
-          void setCell(int id, bool status);
-          int getworldSize(); // should return an array with Nx, Ny, worldSize, needs fix
-          bool getWorld(); // returns whole World
-          bool getnewWorld(); // returns whole newWorld
-          void setWorld(bool map[]); // sets World
-          void randomWorld(int spores); // randomly sets cells status
-          void clearWorld(); // clears world
-};
 
 // creation of universe with given dimensions
 CAbase::CAbase(int size_x, int size_y){
     Nx=size_x;
     Ny=size_y;
     World=new bool[Nx*Ny];
+}
+
+CAbase::~CAbase(){
+    cout << "goodbye!";
 }
 
 /* class methods */
@@ -89,7 +61,7 @@ void CAbase::evolveCell(int x, int y){
     evolveCell(cellId(x,y));
 }
 
-void CAbase::evolveCell(int id){
+bool CAbase::evolveCell(int id){
     bool status=0;
     int ln = livingNeighbors(id);
     switch (ln){
@@ -100,6 +72,7 @@ void CAbase::evolveCell(int id){
         default: status = 0;
     }
     newWorld[id]=status;
+    return status;
 }
 
 void CAbase::resizeWorld(int size_x, int size_y){
@@ -123,6 +96,7 @@ void CAbase::evolveWorld(){
     // delete new world values
 };
 
+/*
 bool CAbase::getWorld(){
     return World;
 };
@@ -140,12 +114,10 @@ void CAbase::randomWorld(int spores){
     //we tell how many living cells should be there, and randomly insert them
 
 };
+*/
 
 void CAbase::clearWorld(){
     delete [] World;
     delete [] newWorld;
     createWorld();
 };
-
-
-#endif // CABASE_H
