@@ -11,7 +11,13 @@ using namespace std;
 CAbase::CAbase(int size_x, int size_y){
     Nx=size_x;
     Ny=size_y;
-    World=new bool[Nx*Ny];
+    worldSize=Nx*Ny;
+    World=new int[worldSize];
+    newWorld=new int[worldSize];
+    for (int i=0; i<worldSize; i++){
+        World[i]=0;
+        newWorld[i]=0;
+    }
 }
 
 CAbase::~CAbase(){
@@ -19,6 +25,14 @@ CAbase::~CAbase(){
 }
 
 /* class methods */
+int CAbase::getworldWidth(){
+    return Nx;
+}
+
+int CAbase::getworldHeigh(){
+    return Ny;
+}
+
 
 int CAbase::livingNeighbors(int id){
     // counter of living cells
@@ -39,20 +53,20 @@ int CAbase::cellId(int x, int y){
     return ((y-1)*Nx+(x-1));
 }
 
-bool CAbase::getCell(int x, int y){
+int CAbase::getCell(int x, int y){
     return getCell(cellId(x,y));
 };
 
-bool CAbase::getCell(int id){
+int CAbase::getCell(int id){
     return World[id];
 };
 
-void CAbase::setCell(int x, int y, bool status){
+void CAbase::setCell(int x, int y, int status){
     // sets the value of cell in world, used to setup or change status
     setCell(cellId(x,y), status);
 };
 
-void CAbase::setCell(int id, bool status){
+void CAbase::setCell(int id, int status){
     // sets the value of cell in world, used to setup or change status
     World[id]=status;
 };
@@ -61,8 +75,8 @@ void CAbase::evolveCell(int x, int y){
     evolveCell(cellId(x,y));
 }
 
-bool CAbase::evolveCell(int id){
-    bool status=0;
+int CAbase::evolveCell(int id){
+    int status=0;
     int ln = livingNeighbors(id);
     switch (ln){
         case 0: status = 0;
@@ -84,8 +98,8 @@ void CAbase::resizeWorld(int size_x, int size_y){
 
 void CAbase::createWorld(){
     // we just set the vars, but don'T touch their inner, should be 0 anyways.
-    World = new bool[worldSize];
-    newWorld = new bool[worldSize];
+    World = new int[worldSize];
+    newWorld = new int[worldSize];
 }
 
 void CAbase::evolveWorld(){
@@ -95,26 +109,6 @@ void CAbase::evolveWorld(){
     // copy new world to old
     // delete new world values
 };
-
-/*
-bool CAbase::getWorld(){
-    return World;
-};
-
-bool CAbase::getnewWorld(){
-    return newWorld;
-};
-
-void CAbase::setWorld(bool map[]){
-    // needs fix
-    World=map;
-};
-
-void CAbase::randomWorld(int spores){
-    //we tell how many living cells should be there, and randomly insert them
-
-};
-*/
 
 void CAbase::clearWorld(){
     delete [] World;

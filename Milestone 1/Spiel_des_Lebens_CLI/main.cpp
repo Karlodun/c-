@@ -7,7 +7,7 @@
 
 using namespace std;
 
-CAbase base1(30, 30);
+CAbase base1(10, 10);
 
 void savegame(){
 
@@ -29,26 +29,25 @@ void printMap(){
     int worldWidth = base1.getworldWidth();
     int worldHeigh = base1.getworldHeigh();
     // print top border
-    cout << "┌";
+    cout << "+";
     for (int i=0; i<worldWidth; i++){
-        cout << "───";
+        cout << "--";
     }
-    cout  << "┐";
+    cout  << "+" << endl;
     // inner values
     for (int i=0; i<worldWidth; i++){
-        // print left border using "│"
-        cout << "│ ";
+        cout << "+ ";
         for (int j=0; j<worldHeigh; j++){
-            cout << base1.getCell(i,j) << " ";
+            cout << ((base1.getCell(i,j)) ? "*" : " ") << " ";
         }
-        cout << "│" << endl;
+        cout << "+" << endl;
     }
     // print bottom border
-    cout << "└";
+    cout << "+";
     for (int i=0; i<worldWidth; i++){
-        cout << "───";
+        cout << "--";
     }
-    cout << "┘" << endl;
+    cout << "+" << endl;
 }
 
 void printCLI(){
@@ -58,6 +57,7 @@ void printCLI(){
 
 int main()
 {
+    printCLI();
     do {
         string userinput;
         int menuoption, worldRow, worldColumn, worldWidth, worldHeigh;
@@ -81,7 +81,7 @@ int main()
                 // loop to get the row number
                 // a simple while would be more appropriate, but we'll use do while, just in case
                 do{
-                    cout << "Enter row number (1-" << worldHeigh << "30): ";
+                    cout << "Enter row number (1-" << worldHeigh << "): ";
                     getline(cin, userinput);
                     stringstream inputStream(userinput);
                     if (inputStream >> worldRow){
@@ -110,7 +110,7 @@ int main()
                 cout << "New value (1-9): ";
                 // change state of cell
 
-                base1.setCell((worldRow-1),(worldColumn-1), !(base1.getCell((worldColumn-1), (worldRow-1)))) ;
+                base1.setCell((worldRow-1),(worldColumn-1), ( (base1.getCell(worldColumn-1), (worldRow-1)) ? 0 : 1 ) );
                 break;
             case 2 :
                 printCLI();
