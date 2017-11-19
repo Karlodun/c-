@@ -5,15 +5,14 @@
 #include <string>
 #include <sstream>
 
-// version 0.6
+// version 0.8
 // debug map to see living neighbors added
 // in-place evolution added
 // missing: save game and load game
-// bug: abrupt program stop on reprint after some evolutions, needs fix
 
 using namespace std;
 
-CAbase base1(30, 30);
+CAbase base1(10, 10);
 
 void savegame(){
 
@@ -57,6 +56,7 @@ void printMap(int worldType){
             case 3 :
                 // print amount of living neighbors for each cell
                 cout << base1.livingNeighbors(i,j) << " ";
+                break;
             default:
                 break;
             }
@@ -111,30 +111,25 @@ int main()
             case 1 :  // set cell to value manually
                 cout << "Which cell do you want to change?" << endl;
                 cout << "Enter row number (1-" << worldHeigh << "): ";
-                worldRow = intUserInput(1, worldHeigh);
+                worldRow = intUserInput(1, worldHeigh)-1;
                 cout << "Enter column number (1-" << worldWidth << "): ";
-                worldColumn=intUserInput(1, worldWidth);
+                worldColumn=intUserInput(1, worldWidth)-1;
                 cellValue=intUserInput(0, 1);
-                cout << "Row: " << worldRow << " Column: " << worldColumn;
-                cout << " Actual value: " << base1.getCell((worldColumn-1), (worldRow-1)) << endl;
-                cout << "New value: ";
                 // change state of cell
-                base1.setCell((worldRow-1),(worldColumn-1), cellValue );
+                base1.setCell(worldRow,worldColumn, cellValue );
                 break;
 
             case 2 :
                 // flip cell value 0<->1
                 cout << "Which cell do you want to change?" << endl;
                 cout << "Enter row number (1-" << worldHeigh << "): ";
-                worldRow = intUserInput(1, worldHeigh);
+                worldRow = intUserInput(1, worldHeigh)-1;
                 cout << "Enter column number (1-" << worldWidth << "): ";
-                worldColumn=intUserInput(1, worldWidth);
-                cout << "Row: " << worldRow << " Column: " << worldColumn;
-                cout << " Actual value: " << base1.getCell((worldColumn-1), (worldRow-1)) << endl;
-
+                worldColumn=intUserInput(1, worldWidth)-1;
                 // now flip the state of cell
-                base1.flipCell( (worldRow-1), (worldColumn-1) );
+                base1.flipCell( worldRow, worldColumn );
                 break;
+
             case 3 :
                 printMap();
                 break;
@@ -166,25 +161,27 @@ int main()
                     wronginput=true;
                 }while(wronginput);
                 base1.resizeWorld(ySize, xSize);
+                break;
 
             // now some "hidden features":
-            case 8 :
+            case 7 :
                 // evolve one cell in world asynchronously
                 cout << "Which cell do you want to evolve in place?" << endl;
                 cout << "Enter row number (1-" << worldHeigh << "): ";
-                worldRow = intUserInput(1, worldHeigh);
+                worldRow = intUserInput(1, worldHeigh)-1;
                 cout << "Enter column number (1-" << worldWidth << "): ";
-                worldColumn=intUserInput(1, worldWidth);
-                cout << "Row: " << worldRow << " Column: " << worldColumn;
-                cout << "Actual value: " << base1.getCell((worldColumn-1), (worldRow-1)) << endl;
-                cellValue = base1.evolveCell((worldColumn-1), (worldRow-1));
-                // now evolve this one cell
-                base1.setCell((worldColumn-1), (worldRow-1), cellValue);
-                cout << "New value: " << base1.getCell((worldColumn-1), (worldRow-1)) << endl;
+                worldColumn=intUserInput(1, worldWidth)-1;
+                cellValue = base1.evolveCell(worldColumn, worldRow); // get new Value
+                base1.setCell(worldColumn, worldRow, cellValue); // evolve this one cell
+                break;
+            case 8 :
+                // print newWorld, not implemented
+                printMap(2);
                 break;
             case 9 :
                 // print neighbor cell map
                 printMap(3);
+                break;
             default:
                 cout << "Please choose one of the given options (0-2)";
                 break;

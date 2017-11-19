@@ -12,12 +12,7 @@ CAbase::CAbase(int size_x, int size_y){
     Nx=size_x;
     Ny=size_y;
     worldSize=Nx*Ny;
-    World=new bool[worldSize];
-    newWorld=new bool[worldSize];
-    for (int i=0; i<worldSize; i++){
-        World[i]=0;
-        newWorld[i]=0;
-    }
+    createWorld();
 }
 
 CAbase::~CAbase(){
@@ -33,21 +28,20 @@ int CAbase::getworldHeigh(){
     return Ny;
 }
 
-
 int CAbase::livingNeighbors(int x, int y){
     return livingNeighbors(cellId(x,y));
 }
 
 int CAbase::livingNeighbors(int id){
-    // counter of living cells
+    // counter of living neighbors
     int livingNeighbors = 0;
     // outer loop for rows
-    for ( int i=-1; i<1; i++) {
+    for ( int i=-1; i<2; i++) {
         // inner loop for columns
-        for ( int j=-1; j<1; j++) {
+        for ( int j=-1; j<2; j++) {
             if ( !((i==0) & (j==0)) ) {// we exclude the cell itself
                 int checkid = id+(Ny*i+j);
-                if ( (0<=checkid) && (checkid<worldSize) )
+                if ( (0<=checkid) && (checkid<worldSize) ) // we exclude cells out of scope
                     livingNeighbors += World[checkid];
             }
         }
@@ -94,6 +88,7 @@ bool CAbase::evolveCell(int x, int y){
 bool CAbase::evolveCell(int id){
     bool status=0;
     int ln = livingNeighbors(id);
+    cout << "(ln: "<< ln << ")";
     switch (ln){
         case 2 :
             status = (World[id]) ? 1 : 0;
@@ -113,33 +108,43 @@ void CAbase::resizeWorld(int size_x, int size_y){
     Nx=size_x;
     Ny=size_y;
     worldSize = Nx*Ny;
+    delete [] World;
+    World = NULL; // just to make sure no memory is allocated to World
+    delete [] newWorld;
+    newWorld = NULL;
     createWorld();
 }
 
 void CAbase::createWorld(){
-    // we just set the vars, but don'T touch their inner, should be 0 anyways.
+    // we just set the vars, but don't touch their inner, should be 0 anyways.
     World = new bool[worldSize];
     newWorld = new bool[worldSize];
+    for (int i=0; i<worldSize; i++){
+        World[i]=0;
+        newWorld[i]=0;
+    }
 }
 
 void CAbase::evolveWorld(){
-    for (int cellid=0; cellid<=worldSize; cellid++){
-        evolveCell(cellid);
-    }
     // reset living cells counter
     alive=0;
+    // project cell evolution to newWorld
+    for (int cellid=0; cellid<=worldSize; cellid++){
+        cout << "Evolving Cell: " << cellid << ", new value: ";
+        cout << evolveCell(cellid) << endl;
+        alive+=World[cellid];
+    }
+    cout << endl << "living cells in new world: " << alive << endl;
 
     // copy new world to old
     for (int i=1; i<worldSize; i++){
         World[i]=newWorld[i];
-        alive+=World[i];
     }
-    // delete new world values
-    delete [] newWorld;
-};
+    // no need to delete newWorld
+}
 
 void CAbase::clearWorld(){
     delete [] World;
     delete [] newWorld;
     createWorld();
-};
+}
