@@ -34,14 +34,22 @@ int CAbase::getworldHeigh(){
 }
 
 
+int CAbase::livingNeighbors(int x, int y){
+    return livingNeighbors(cellId(x,y));
+}
+
 int CAbase::livingNeighbors(int id){
     // counter of living cells
     int livingNeighbors = 0;
     // outer loop for rows
     for ( int i=-1; i<1; i++) {
-        for ( int j=0; j<1; j++) {
-            if (!((i==0) & (j==0))) // we exclude the cell itself
-                livingNeighbors += World[id+(Ny*i+j)];
+        // inner loop for columns
+        for ( int j=-1; j<1; j++) {
+            if ( !((i==0) & (j==0)) ) {// we exclude the cell itself
+                int checkid = id+(Ny*i+j);
+                if ( (0<=checkid) && (checkid<worldSize) )
+                    livingNeighbors += World[checkid];
+            }
         }
     }
     return livingNeighbors;
@@ -87,11 +95,15 @@ bool CAbase::evolveCell(int id){
     bool status=0;
     int ln = livingNeighbors(id);
     switch (ln){
-        case 0: status = 0;
-        case 1: status = 0;
-        case 2: status = (World[id]) ? 1 : 0;
-        case 3: status = 1;
-        default: status = 0;
+        case 2 :
+            status = (World[id]) ? 1 : 0;
+            break;
+        case 3 :
+            status = 1;
+            break;
+        default:
+            status = 0;
+            break;
     }
     newWorld[id]=status;
     return status;
