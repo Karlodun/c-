@@ -9,10 +9,11 @@ class CAbase
 {
      private :
     // worldSize is there just to prevent repetitive calculation where possible
-          int Nx, Ny, worldSize, alive=0, World_age=0;
+          int Nx, Ny, worldSize;
           bool *World = NULL;
           bool *newWorld = NULL;
      public :
+          int alive=0, World_age=0;
           // constructor
           CAbase(int size_x, int size_y);
           // destructor:

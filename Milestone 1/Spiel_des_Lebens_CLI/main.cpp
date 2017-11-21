@@ -11,7 +11,7 @@
 
 using namespace std;
 
-CAbase base1(30, 30);
+CAbase base1(10, 10);
 
 void printMenu(){
     cout << "Choose an option: " << endl;
@@ -39,14 +39,14 @@ void printMap(int worldType){
             switch (worldType) {
             case 1 :
                 // print normal world
-                cout << ((base1.getCell(i,j)) ? "*" : " ") << " ";
+                cout << ((base1.getCell(j,i)) ? "*" : " ") << " ";
                 break;
             case 2 :
                 // placeholder
                 break;
             case 3 :
                 // print amount of living neighbors for each cell
-                cout << base1.livingNeighbors(i,j) << " ";
+                cout << base1.livingNeighbors(j,i) << " ";
                 break;
             default:
                 break;
@@ -60,6 +60,7 @@ void printMap(int worldType){
         cout << "--";
     }
     cout << "+" << endl;
+    cout << "Living cells: " << base1.alive << " age: " << base1.World_age << endl;
 }
 
 void printMap(){
@@ -107,7 +108,7 @@ int main()
                 worldColumn=intUserInput(1, worldWidth)-1;
                 cellValue=intUserInput(0, 1);
                 // change state of cell
-                base1.setCell(worldRow,worldColumn, cellValue );
+                base1.setCell(worldColumn,worldRow, cellValue );
                 break;
 
             case 2 :
@@ -118,11 +119,12 @@ int main()
                 cout << "Enter column number (1-" << worldWidth << "): ";
                 worldColumn=intUserInput(1, worldWidth)-1;
                 // now flip the state of cell
-                base1.flipCell( worldRow, worldColumn );
+                base1.flipCell(worldColumn,worldRow);
                 break;
 
             case 3 :
                 printMap();
+                printMenu();
                 break;
 
             case 4 :

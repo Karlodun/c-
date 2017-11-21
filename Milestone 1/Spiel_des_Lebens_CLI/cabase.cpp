@@ -35,14 +35,19 @@ int CAbase::livingNeighbors(int x, int y){
 int CAbase::livingNeighbors(int id){
     // counter of living neighbors
     int livingNeighbors = 0;
+    int row, col;
     // outer loop for rows
     for ( int i=-1; i<2; i++) {
         // inner loop for columns
         for ( int j=-1; j<2; j++) {
             if ( !((i==0) & (j==0)) ) {// we exclude the cell itself
-                int checkid = id+(Ny*i+j);
-                if ( (0<=checkid) && (checkid<worldSize) ) // we exclude cells out of scope
-                    livingNeighbors += World[checkid];
+                // here we decided to train ternary if....
+                // after hours of headache it works, and looks nice, and it means:
+                // if top edge ? look down : otherwise ( if bottom edge ? look up : otherwise i)
+                row = ( (( (id/Nx)==0 ) & (i==-1)) ? (Ny-1) : ( (( (Ny-1)==id/Nx) & (i==1)) ? -(Ny-1) : i ) );
+                // similar, but for sides.
+                col = ( (( (id%Nx)==0) & (j==-1)) ? (Nx-1) : ( (( (id%Nx)==(Nx-1)) & (j==1)) ? -(Nx-1) : j ) );
+                livingNeighbors += ( World[id+(Nx*row+col)] ? 1 : 0);
             }
         }
     }
@@ -69,6 +74,9 @@ void CAbase::setCell(int x, int y, bool status){
 };
 
 void CAbase::setCell(int id, bool status){
+    // manage living cells counter:
+    alive += (status & !World[id] ? 1 : 0); //if status is 1 and cell is dead, add one
+    alive -= (!status & World[id] ? 1 : 0); //if status is 0 and cell is alive, substr one
     // sets the value of cell in world, used to setup or change status
     World[id]=status;
 };
@@ -78,6 +86,7 @@ void CAbase::flipCell(int x, int y){
 }
 
 void CAbase::flipCell(int id){
+    alive += (World[id] ? -1 : 1); //if cell is alive, kill one
     World[id]=!World[id];
 }
 
@@ -86,19 +95,26 @@ bool CAbase::evolveCell(int x, int y){
 }
 
 bool CAbase::evolveCell(int id){
+    // if used to evolve cell, will not affect amount of living cells!
+    // yes we have some kind of a Schroedingers (Cat) Cell !!
     bool status=0;
     int ln = livingNeighbors(id);
-    cout << "(ln: "<< ln << ")";
     switch (ln){
-        case 2 :
-            status = (World[id]) ? 1 : 0;
-            break;
-        case 3 :
-            status = 1;
-            break;
-        default:
-            status = 0;
-            break;
+    case 0 :
+        status = 0;
+        break;
+    case 1 :
+        status = 0;
+        break;
+    case 2 :
+        status = (World[id]) ? 1 : 0;
+        break;
+    case 3 :
+        status = 1;
+        break;
+    default:
+        status = 0;
+        break;
     }
     newWorld[id]=status;
     return status;
@@ -130,16 +146,16 @@ void CAbase::evolveWorld(){
     alive=0;
     // project cell evolution to newWorld
     for (int cellid=0; cellid<=worldSize; cellid++){
-        cout << "Evolving Cell: " << cellid << ", new value: ";
-        cout << evolveCell(cellid) << endl;
-        alive+=World[cellid];
+        evolveCell(cellid);
     }
-    cout << endl << "living cells in new world: " << alive << endl;
 
     // copy new world to old
-    for (int i=1; i<worldSize; i++){
+    for (int i=0; i<worldSize; i++){
         World[i]=newWorld[i];
+        alive+=World[i];
     }
+    World_age++;
+    cout << endl << "living cells in age " << World_age << ": " << alive << endl;
     // no need to delete newWorld
 }
 
