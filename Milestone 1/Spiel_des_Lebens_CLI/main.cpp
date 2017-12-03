@@ -4,8 +4,11 @@
 #include <stdlib.h>
 #include <string>
 #include <sstream>
+#include <ctime>
 
-// version 0.9
+//srand(time(NULL)); //seed randomizer
+
+// version 1.1
 // debug map to see living neighbors added
 // in-place evolution added
 
@@ -42,7 +45,8 @@ void printMap(int worldType){
                 cout << ((base1.getCell(j,i)) ? "*" : " ") << " ";
                 break;
             case 2 :
-                // placeholder
+                // print ids
+                cout << base1.cellId(j,i) << " | ";
                 break;
             case 3 :
                 // print amount of living neighbors for each cell
@@ -81,6 +85,34 @@ int intUserInput(int minValue, int maxValue){
         wronginput=true;
     }while(wronginput);
     return numChoice;
+}
+
+void PrepareFieldSnake(){
+    // we use initial size, and add borders
+    base1.resizeWorld(base1.Nx+2,base1.Ny+2); // also clears world
+    // our game is setup in a way, that the border is made of "walls", which are cells with value=2
+    // thus we can have random obstacles on the field, if wanted. Game can be extended easely to have this.
+    // add borders to outer cells, according to requirement, those borders should NOT be visible on field
+    // we could make the field borders thicker, to visualize them.
+    for (int i=0; i<=base1.Nx; i++) {  // yes, we set the corner cells twice, who cares?
+        base1.setCell(i,0,2); //first row, first to last cell
+        base1.setCell(i,base1.Ny,2); //last row, first to last cell
+        base1.setCell(0,i,2); //first column, first to last cell
+        base1.setCell(0,base1.Nx,2); //last column, first to last cell
+    }
+
+    /* random head setter,
+     * disabled to comply with requirements that our snake needs head, few body and a tail part
+     * those are distinguished just by their values (tail is always 3, even if tail=head)
+    base1.setSnake(base1.randomObjId()); // creates one object with value=3, and all objects with value>2 are movable and belong to snake.
+    */
+    // manual snake set:
+    base1.setSnake(base1.cellId(5,5)); //set head at 5,5
+    base1.setCell(5,5,6); // fix head from 3 to 6
+    base1.setCell(5,6,5); // set first body part at 5,6
+    base1.setCell(5,7,4); // set second body part at 5,7
+    base1.setCell(5,8,3); // set tail at 5,8
+    base1.setFood(base1.randomObjId());
 }
 
 int main()
@@ -166,6 +198,10 @@ int main()
                 worldColumn=intUserInput(1, worldWidth)-1;
                 cellValue = base1.evolveCell(worldColumn, worldRow); // get new Value
                 base1.setCell(worldColumn, worldRow, cellValue); // evolve this one cell
+                break;
+            case 8 :
+                // print id map
+                printMap(2);
                 break;
             case 9 :
                 // print neighbor cell map
