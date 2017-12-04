@@ -20,18 +20,6 @@ CAbase::~CAbase(){
 }
 
 /* class methods */
-int CAbase::getworldWidth(){
-    return Nx;
-}
-
-int CAbase::getworldHeigh(){
-    return Ny;
-}
-
-int CAbase::livingNeighbors(int x, int y){
-    return livingNeighbors(cellId(x,y));
-}
-
 int CAbase::livingNeighbors(int id){
     // counter of living neighbors
     int livingNeighbors = 0;
@@ -60,17 +48,8 @@ int CAbase::cellId(int x, int y){
     return (y*Nx+x);
 }
 
-int CAbase::getCell(int x, int y){
-    return getCell(cellId(x,y));
-};
-
 int CAbase::getCell(int id){
     return World[id];
-};
-
-void CAbase::setCell(int x, int y, int status){
-    // sets the value of cell in world, used to setup or change status
-    setCell(cellId(x,y), status);
 };
 
 void CAbase::setCell(int id, int status){
@@ -80,10 +59,6 @@ void CAbase::setCell(int id, int status){
     // sets the value of cell in world, used to setup or change status
     World[id]=status;
 };
-
-void CAbase::flipCell(int x, int y){
-    flipCell(cellId(x,y));
-}
 
 void CAbase::flipCell(int id){
     if (World[id]==0){
@@ -95,10 +70,6 @@ void CAbase::flipCell(int id){
         World[id]=0;
     }
     // else we do nothing
-}
-
-int CAbase::evolveCell(int x, int y){
-    return evolveCell(cellId(x,y));
 }
 
 int CAbase::evolveCell(int id){
@@ -137,7 +108,6 @@ int CAbase::evolveCell(int id){
     return newWorld[id];
 }
 
-
 int CAbase::randomObjId(){
     // randomly places snake head on any free map cell
     int randCell=rand()%worldSize; // limit max iterations to prevent long searches
@@ -149,7 +119,7 @@ int CAbase::randomObjId(){
         if ((cellid>worldSize) & (cellShift<randCell)){
             cellid=0; // restart if necessary
         }
-        else return; // iterator unchanged, means we found no empty cells;
+        else return 0; // iterator unchanged, means we found no empty cells;
     }
     // search for next possible free cell and use it
     do{
@@ -161,83 +131,114 @@ int CAbase::randomObjId(){
 }
 
 void CAbase::setSnakeHead(int id){
-    // forcefully places snake head on choosen id, will change any value to snake
-    setCell(id, 3);
+    // forcefully places snake head on choosen id with 7 for no direction
+    // will change any value to snake
+    setCell(id, 7);
     snakeHeadCell=id;
 }
 
 int CAbase::nextSnakePart(int id){
-    int nextid;
-    // we search for next snake part on top, left, bottom, right, we expect that actual Part is > 3:
-    if ((World[id]-1) == World[id-Nx]){ // top
-        nextid=id-Nx;
-    } else if ((World[id]-1) == World[id-1]){ // left
-        nextid=id-1;
-    } else if ((World[id]-1) == World[id+Nx]){ // bottom
-        nextid=id+Nx;
-    } else if ((World[id]-1) == World[id+1]){ // top
-        nextid=id+1;
-    } else {
-        nextid=id; //return self if no other value found, caller should see this as indication for end of snake
+    int nextid=-1;
+    if ( (2 < World[id]) & (10 > World[id]) ){ // we have a head
+        // search for neighbor with highest value over 9
+        int nextValue=9; //needed only to find cell with highest value
+        if (nextValue<World[id-Nx]) {nextValue=World[id-Nx]; nextid=id-Nx;}
+        if (nextValue<World[id-1]) {nextValue=World[id-1]; nextid=id-1;}
+        if (nextValue<World[id+Nx]) {nextValue=World[id+Nx]; nextid=id+Nx;}
+        if (nextValue<World[id+1]) {nextValue=World[id+1]; nextid=id+1;}
+    } else if (10 < World[id]) { // we have body
+        // we search for next snake part on top, left, bottom, right
+        // next snake part is smaller by 1
+        if ((World[id]-1) == World[id-Nx]){ // top
+            nextid=id-Nx;
+        } else if ((World[id]-1) == World[id-1]){ // left
+            nextid=id-1;
+        } else if ((World[id]-1) == World[id+Nx]){ // bottom
+            nextid=id+Nx;
+        } else if ((World[id]-1) == World[id+1]){ // top
+            nextid=id+1;
+        }
     }
     return nextid;
 }
 
-int CAbase::newSnakeId(int id, int direction){
-    int newid; // this will be new id to move to
-    switch(direction){
+int CAbase::moveSnakeHead(){
+    // get id of the cell we want to move to
+    int newid;
+    int id=snakeHeadCell;
+    switch(World[snakeHeadCell]){
     case 8 : //up
         newid = id - Nx;
         break;
     case 4 : //left
         newid = id - 1;
         break;
-    case 2 : //down
+    case 5 : //down
         newid = id + Nx;
         break;
     case 6 : //right
         newid = id + 1;
         break;
+    default : //dead or not there
+        return -1;
     }
-    return newid;
-}
-
-void CAbase::moveSnakeCell(int id, int direction){
-    // snakes head has biggest number, tail is 3
-    // thus snake consists of numbers greater then 2
-    int newid = newSnakeId(id, direction);
     // depending on the object in newid our snake can move, grow or die
     switch(World[newid]){
     case 0 : // move
-        newWorld[newid]=World[id];
-        break;
+        World[newid]=World[id];
+        return 0;
     case 1 : // grow
-        newWorld[newid]=World[id]+1;
-        break;
+        World[newid]=World[id];
+        setCell(randomObjId(),1); // create random food cell
+        return 1;
     default : // die, die, die my darling!
-        snakeStatus=2;
-        break;
+        World[newid]=9;  // 9 in head means dead
+        return -1;
     }
 }
 
-int CAbase::moveSnake(){
-    int snakePartId=snakeHeadCell;
-    int snakePart=World[snakePartId];  // start at head
-    while( (snakeStatus==1) & (snakePart>2)){  //snakePart==3 is our tail, after that we just abort.
-        moveSnakeCell(snakePartId, moveDir);
-        snakePart--;
-        snakePart=nextSnakePart(snakePartId);
+void CAbase::moveSnake(){
+    // snake moves inside world, to preven unnecessary steps and evaluations
+    // we evaluate snake cells only, ommiting other
+    if (0==moveSnakeHead()){ //if head moves normally forward, move other parts
+        // now we move body and tail cells
+        int targetCellId=snakeHeadCell;
+        int snakePartId=nextSnakePart(snakeHeadCell);
+        //snakePart==10 is our tail, after that we just abort
+        // check if snake is not dead, and we are still moving snake parts
+        while( (World[snakeHeadCell]!=9) & (World[snakePartId]>9)){
+            //move that cell to the one that was moved previously
+            World[targetCellId]=World[snakePartId];
+            targetCellId=snakePartId;
+            snakePartId=nextSnakePart(snakePartId);
+        }
     }
-    return snakeStatus;
 }
 
 void CAbase::setDir(int newDir){
     //check if there is a cell, smaller then head in that new direction, no move is possible then!
-    if (World[snakeHeadCell]!=World[newSnakeId(snakeHeadCell, newDir)]-1){ // not tail/body!
-        moveDir=newDir;
+    int newid;
+    int id=snakeHeadCell;
+    switch(newDir){
+    case 8 : //up
+        newid = id - Nx;
+        break;
+    case 4 : //left
+        newid = id - 1;
+        break;
+    case 5 : //down
+        newid = id + Nx;
+        break;
+    case 6 : //right
+        newid = id + 1;
+        break;
+    default : //dead or not there
+        return;
+    }
+    if (World[newid]<10){ // if not tail/body
+        World[id]=newDir;
     };
 }
-
 
 void CAbase::resizeWorld(int size_x, int size_y){
     Nx=size_x;

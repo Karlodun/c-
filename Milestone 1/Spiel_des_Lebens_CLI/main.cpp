@@ -27,18 +27,16 @@ void printMenu(){
 }
 
 void printMap(int worldType){
-    int worldWidth = base1.getworldWidth();
-    int worldHeigh = base1.getworldHeigh();
     // print top border
     cout << "+";
-    for (int i=0; i<worldWidth; i++){
+    for (int i=0; i<base1.Nx; i++){
         cout << "--";
     }
     cout  << "+" << endl;
     // inner values
-    for (int i=0; i<worldWidth; i++){
+    for (int i=0; i<base1.Nx; i++){
         cout << "+ ";
-        for (int j=0; j<worldHeigh; j++){
+        for (int j=0; j<base1.Ny; j++){
             switch (worldType) {
             case 1 :
                 // print normal world
@@ -60,7 +58,7 @@ void printMap(int worldType){
     }
     // print bottom border
     cout << "+";
-    for (int i=0; i<worldWidth; i++){
+    for (int i=0; i<base1.Nx; i++){
         cout << "--";
     }
     cout << "+" << endl;
@@ -104,15 +102,16 @@ void PrepareFieldSnake(){
     /* random head setter,
      * disabled to comply with requirements that our snake needs head, few body and a tail part
      * those are distinguished just by their values (tail is always 3, even if tail=head)
-    base1.setSnake(base1.randomObjId()); // creates one object with value=3, and all objects with value>2 are movable and belong to snake.
+    base1.setSnakeHead(base1.randomObjId()); // creates one object with value=3, and all objects with value>2 are movable and belong to snake.
     */
     // manual snake set:
-    base1.setSnake(base1.cellId(5,5)); //set head at 5,5
-    base1.setCell(5,5,6); // fix head from 3 to 6
-    base1.setCell(5,6,5); // set first body part at 5,6
-    base1.setCell(5,7,4); // set second body part at 5,7
-    base1.setCell(5,8,3); // set tail at 5,8
-    base1.setFood(base1.randomObjId());
+    base1.setSnakeHead(base1.cellId(5,5)); //set head at 5,5
+    base1.setCell(5,5,8); // fix head from 3 to 6
+    base1.setCell(5,6,12); // set first body part at 5,6
+    base1.setCell(5,7,11); // set second body part at 5,7
+    base1.setCell(5,8,10); // set tail at 5,8
+     // random food cell 1 is food, we could combine both games :-)
+    base1.setCell(base1.randomObjId(),1);
 }
 
 int main()
@@ -121,10 +120,8 @@ int main()
     printMenu();
     do {
         string userinput;
-        int menuoption, worldRow, worldColumn, worldWidth, worldHeigh;
-        bool wronginput, cellValue;
-        worldWidth=base1.getworldWidth();
-        worldHeigh=base1.getworldHeigh();
+        int menuoption, worldRow, worldColumn, cellValue;
+        bool wronginput;
         getline(cin, userinput);
         stringstream inputStream(userinput);
         if (inputStream >> menuoption)
@@ -134,10 +131,10 @@ int main()
 
             case 1 :  // set cell to value manually
                 cout << "Which cell do you want to change?" << endl;
-                cout << "Enter row number (1-" << worldHeigh << "): ";
-                worldRow = intUserInput(1, worldHeigh)-1;
-                cout << "Enter column number (1-" << worldWidth << "): ";
-                worldColumn=intUserInput(1, worldWidth)-1;
+                cout << "Enter row number (1-" << base1.Ny << "): ";
+                worldRow = intUserInput(1, base1.Ny)-1;
+                cout << "Enter column number (1-" << base1.Nx << "): ";
+                worldColumn=intUserInput(1, base1.Nx)-1;
                 cellValue=intUserInput(0, 1);
                 // change state of cell
                 base1.setCell(worldColumn,worldRow, cellValue );
@@ -146,10 +143,10 @@ int main()
             case 2 :
                 // flip cell value 0<->1
                 cout << "Which cell do you want to change?" << endl;
-                cout << "Enter row number (1-" << worldHeigh << "): ";
-                worldRow = intUserInput(1, worldHeigh)-1;
-                cout << "Enter column number (1-" << worldWidth << "): ";
-                worldColumn=intUserInput(1, worldWidth)-1;
+                cout << "Enter row number (1-" << base1.Ny << "): ";
+                worldRow = intUserInput(1, base1.Ny)-1;
+                cout << "Enter column number (1-" << base1.Nx << "): ";
+                worldColumn=intUserInput(1, base1.Nx)-1;
                 // now flip the state of cell
                 base1.flipCell(worldColumn,worldRow);
                 break;
@@ -192,10 +189,10 @@ int main()
             case 7 :
                 // evolve one cell in world asynchronously
                 cout << "Which cell do you want to evolve in place?" << endl;
-                cout << "Enter row number (1-" << worldHeigh << "): ";
-                worldRow = intUserInput(1, worldHeigh)-1;
-                cout << "Enter column number (1-" << worldWidth << "): ";
-                worldColumn=intUserInput(1, worldWidth)-1;
+                cout << "Enter row number (1-" << base1.Ny << "): ";
+                worldRow = intUserInput(1, base1.Ny)-1;
+                cout << "Enter column number (1-" << base1.Nx << "): ";
+                worldColumn=intUserInput(1, base1.Nx)-1;
                 cellValue = base1.evolveCell(worldColumn, worldRow); // get new Value
                 base1.setCell(worldColumn, worldRow, cellValue); // evolve this one cell
                 break;
