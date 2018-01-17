@@ -165,6 +165,7 @@ void evolveJungle(){
     // procede with pasture
     for (int i=0; i<=rHeard.Population; i++){
         oldID=pHeard.Locations[i];
+        if (base1.World[oldID]!=3) pHeard.Decay(i);  // the expected animal is not there anymore - update Heard data
         moveID=base1.moveSpecialCell(oldID,3);
         moveRes=pHeard.Move(i, moveID, base1.World[moveID]);
         switch(moveRes){
