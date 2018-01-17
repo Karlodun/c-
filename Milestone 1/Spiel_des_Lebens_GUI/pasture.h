@@ -1,6 +1,8 @@
 #ifndef PASTURE_H
 #define PASTURE_H
 
+#include <cstddef>
+
 
 class Pasture
 {

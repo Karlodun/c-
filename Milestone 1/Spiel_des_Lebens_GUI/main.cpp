@@ -148,7 +148,7 @@ void evolveJungle(){
      */
     int oldID, moveID, moveRes;
     // move raptors
-    for (i=0; i<=rHeard.Population; i++){
+    for (int i=0; i<=rHeard.Population; i++){
         oldID=rHeard.Locations[i];
         moveID=base1.moveSpecialCell(oldID,4);
         moveRes=rHeard.Move(i, moveID, base1.World[moveID]);
@@ -158,12 +158,12 @@ void evolveJungle(){
             base1.World[oldID]=0; // remove raptor from old place
             break;
         case 0 : // base knows cell died
-            base1.World[rHeard.Decay(herdID)]=0; // remove decayed raptor
+            base1.World[rHeard.Decay(i)]=0; // remove decayed raptor
         }
     }
 
     // procede with pasture
-    for (i=0; i<=rHeard.Population; i++){
+    for (int i=0; i<=rHeard.Population; i++){
         oldID=pHeard.Locations[i];
         moveID=base1.moveSpecialCell(oldID,3);
         moveRes=pHeard.Move(i, moveID, base1.World[moveID]);
@@ -173,7 +173,7 @@ void evolveJungle(){
             base1.World[oldID]=0; // remove pasture from old place
             break;
         case 0 : // base knows cell died
-            base1.World[rHeard.Decay(herdID)]=0; // remove decayed pasture
+            base1.World[rHeard.Decay(i)]=0; // remove decayed pasture
         }
     }
 }

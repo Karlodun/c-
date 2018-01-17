@@ -1,6 +1,8 @@
 #ifndef RAPTORS_H
 #define RAPTORS_H
 
+#include <cstddef>
+
 
 class Raptors
 {

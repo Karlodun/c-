@@ -54,7 +54,7 @@ int Pasture::Decay(int deadID){
     for (int i=0; i<=Population; i++) Age[i]=BackPack[i];
 
     delete [] BackPack;
-    return newId;
+    return deadID;
 }
 
 int Pasture::Move(int herdID, int newID, int newIDType){
@@ -64,8 +64,7 @@ int Pasture::Move(int herdID, int newID, int newIDType){
      * neither the necessary variables, nor functionality is implemented here
      * since there is just no need
      */
-    int oldID = Locations[herdID];
-    if (newIDType=1) Age[herdID]=0;//we had some food, reset age
+    if (newIDType==1) Age[herdID]=0;//we had some food, reset age
      else Age[herdID]++; // we had no food, thus olden
     if (Age[herdID]>maxAge) return 0;  // we tell the caller, that cell has reached end of life
      else Locations[herdID] = newID;
