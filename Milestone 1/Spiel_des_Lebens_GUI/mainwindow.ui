@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>616</width>
-    <height>476</height>
+    <width>655</width>
+    <height>474</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -29,30 +29,14 @@
       <verstretch>0</verstretch>
      </sizepolicy>
     </property>
-    <widget class="QTableView" name="tableView">
-     <property name="geometry">
-      <rect>
-       <x>0</x>
-       <y>0</y>
-       <width>400</width>
-       <height>400</height>
-      </rect>
-     </property>
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-    </widget>
    </widget>
    <widget class="QFrame" name="frame">
     <property name="geometry">
      <rect>
       <x>420</x>
       <y>40</y>
-      <width>181</width>
-      <height>331</height>
+      <width>231</width>
+      <height>371</height>
      </rect>
     </property>
     <property name="frameShape">
@@ -97,7 +81,7 @@
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>150</y>
+       <y>100</y>
        <width>160</width>
        <height>16</height>
       </rect>
@@ -185,46 +169,23 @@
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>120</y>
+       <y>70</y>
        <width>81</width>
        <height>16</height>
       </rect>
      </property>
      <property name="text">
-      <string>Evolution Speed</string>
+      <string>Steps/Second</string>
      </property>
     </widget>
     <widget class="QLCDNumber" name="lcdSpeed">
      <property name="geometry">
       <rect>
        <x>100</x>
-       <y>120</y>
+       <y>70</y>
        <width>64</width>
        <height>23</height>
       </rect>
-     </property>
-    </widget>
-    <widget class="QComboBox" name="comboBox">
-     <property name="geometry">
-      <rect>
-       <x>91</x>
-       <y>80</y>
-       <width>71</width>
-       <height>22</height>
-      </rect>
-     </property>
-    </widget>
-    <widget class="QLabel" name="label">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>80</y>
-       <width>51</width>
-       <height>16</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Color:</string>
      </property>
     </widget>
     <widget class="QPushButton" name="btnStop">
@@ -318,6 +279,52 @@
       <string>Resize</string>
      </property>
     </widget>
+    <widget class="QSpinBox" name="spinCellsTic">
+     <property name="geometry">
+      <rect>
+       <x>120</x>
+       <y>120</y>
+       <width>43</width>
+       <height>22</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QSpinBox" name="spinSnakeTic">
+     <property name="geometry">
+      <rect>
+       <x>120</x>
+       <y>150</y>
+       <width>43</width>
+       <height>22</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QLabel" name="labelCellsTic">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>120</y>
+       <width>81</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Steps/Age - Cells</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="labelSnakeTic">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>150</y>
+       <width>101</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Steps/Move - Snake</string>
+     </property>
+    </widget>
    </widget>
    <widget class="QLabel" name="labelControls">
     <property name="geometry">
@@ -338,7 +345,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>616</width>
+     <width>655</width>
      <height>20</height>
     </rect>
    </property>

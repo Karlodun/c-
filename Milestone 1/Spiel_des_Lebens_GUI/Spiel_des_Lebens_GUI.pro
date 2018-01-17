@@ -26,11 +26,17 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
         main.cpp \
         mainwindow.cpp \
-    cabase.cpp
+    cabase.cpp \
+    snake.cpp \
+    raptors.cpp \
+    pasture.cpp
 
 HEADERS += \
         mainwindow.h \
-    cabase.h
+    cabase.h \
+    snake.h \
+    raptors.h \
+    pasture.h
 
 FORMS += \
         mainwindow.ui
