@@ -34,7 +34,7 @@ public slots:
     void clear(); // clear
 
     int main();
-    int intUserInput(int minValue, int maxValue);
+//    int intUserInput(int minValue, int maxValue);
     void evolveJungle();
     int cellNumber(); // number of the cells in one row
     void setCellNumber(const int &s); // set number of the cells in one row
@@ -59,8 +59,8 @@ public slots:
     void setDump(const QString &data); // set current universe from it's dump
 
 private slots:
-    void printMap();
-    void printMenu();
+//    void printMap();
+//    void printMenu();
     void paintGrid(QPainter &p);
     void paintUniverse(QPainter &p);
     void newGeneration();

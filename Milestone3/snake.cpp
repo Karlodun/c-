@@ -26,6 +26,7 @@ int Snake::grow(int newCellid){
     for (int i=0; i<length; i++) BodyStep[i]=Body[i];
     Body = new int[length];
     for (int i=0; i<length; i++) Body[i]=BodyStep[i];
+    Body[length]=newCellid;
     delete [] BodyStep;
     return newCellid;
 }

@@ -21,13 +21,13 @@ int Pasture::Grow(int newID){
     Locations = new int [Population];
     for (int i=0; i<Population; i++) Locations[i]=BackPack[i];
     // add new animal to locations:
-    Locations[Population]=newID;
+    Locations[Population-1]=newID;
 
     // procede with Age
     for (int i=0; i<Population; i++) BackPack[i]=Age[i];
     Age = new int [Population];
     for (int i=0; i<Population; i++) Age[i]=BackPack[i];
-    Age[Population]=0;
+    Age[Population-1]=0;
 
     delete [] BackPack;
     return newID;

@@ -89,7 +89,7 @@ void GameWidget::evolveJungle(){
     for (int i=0; i<=rHeard.Population; i++){
         oldID=rHeard.Locations[i];
         moveID=base1.moveSpecialCell(oldID,4);
-        moveRes=rHeard.Move(i, moveID, base1.World[moveID]);
+        moveRes=rHeard.Move(i, moveID, (base1.World[moveID]==3 ? 1 : 0 ));
         switch(moveRes){
         case 1 : // base knows cell has moved and alive
             base1.World[moveID]=4; // set cell to raptor
@@ -105,7 +105,7 @@ void GameWidget::evolveJungle(){
         oldID=pHeard.Locations[i];
         if (base1.World[oldID]!=3) pHeard.Decay(i);  // the expected animal is not there anymore - update Heard data
         moveID=base1.moveSpecialCell(oldID,3);
-        moveRes=pHeard.Move(i, moveID, base1.World[moveID]);
+        moveRes=pHeard.Move(i, moveID, (base1.World[moveID]==1 ? 1 : 0 ));
         switch(moveRes){
         case 1 : // base knows cell has moved and alive
             base1.World[moveID]=3; // set cell to pasture
